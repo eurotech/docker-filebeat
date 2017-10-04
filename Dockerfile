@@ -1,17 +1,14 @@
-FROM busybox
+FROM alpine:3.6
 
-# FILEBEAT_VERSION = 5.0.1
-ENV FILEBEAT_SHA1=6a38929950d510c1aa557f3ef19936644e0182d6
+ENV FILEBEAT_SOURCE=https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.6.2-linux-x86_64.tar.gz
 
-COPY binary/filebeat.tar.gz /tmp/filebeat.tar.gz
+ADD ${FILEBEAT_SOURCE} /tmp
 
-RUN echo "${FILEBEAT_SHA1} */tmp/filebeat.tar.gz" | sha1sum -c -
-
-RUN mkdir /opt && tar xzvf /tmp/filebeat.tar.gz -C /opt && mv /opt/filebeat-* /opt/filebeat
-
-RUN mkdir /etc/filebeat && mv /opt/filebeat/filebeat.* /etc/filebeat
+RUN mkdir -p /opt/filebeat && mkdir /etc/filebeat \
+  && tar zxf /tmp/*.tar.gz -C /opt/filebeat --strip-components=1 \
+  && mv /opt/filebeat/filebeat.yml /etc/filebeat/filebeat.yml \
+  && rm -rf /tmp/*.tar.gz
 
 ENTRYPOINT ["/opt/filebeat/filebeat"]
 
 CMD [ "-e", "-c", "/etc/filebeat/filebeat.yml" ]
-
