@@ -1,6 +1,6 @@
 FROM alpine:3.8
 
-ENV FILEBEAT_SOURCE=https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.4.2-linux-x86_64.tar.gz
+ENV FILEBEAT_SOURCE=https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.5.1-linux-x86_64.tar.gz
 
 RUN apk add libc6-compat \
   && wget "${FILEBEAT_SOURCE}" -O /tmp/filebeat.tar.gz \
